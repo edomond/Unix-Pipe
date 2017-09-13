@@ -1,11 +1,14 @@
 /**
- * Example program demonstrating UNIX pipes.
- *
- * Figures 3.25 & 3.26
- *
- * @author Silberschatz, Galvin, and Gagne
- * Operating System Concepts  - Ninth Edition
- * Copyright John Wiley & Sons - 2013
+Fork/Exec using pipes (Ch. 3 Processes)
+
+Name: Elisabeth Domond
+Course: CPSC 351-02
+
+Description: In the textbook it shows code similar to this one of the parent sending the message, Greetings, to the child. This code, down below, will instead, have the child send the Greetings message to the parent. 
+
+@author Silberschatz, Galvin, and Gagne
+Operating System Concepts  - Ninth Edition
+Copyright John Wiley & Sons - 2013
  */
 
 #include <stdio.h>
@@ -38,23 +41,23 @@ int main(void)
 		return 1;
 	}
 
-	if (pid == 0) {  /* Child process */
+	if (pid == 0) {  /* child process */
 		/* close the unused end of the pipe */
 		close(fd[READ_END]);
 
+		printf("child end of pipe--sending: %s\n", write_msg);
 		/* write to the pipe */
 		write(fd[WRITE_END], write_msg, strlen(write_msg)+1); 	
-
 		/* close the write end of the pipe */
-		close(fd[READ_END]);
+		close(fd[WRITE_END]);
 	}
-	else { /* Parent process */
+	else { /* parent process */
 		/* close the unused end of the pipe */
 		close(fd[WRITE_END]);
 
 		/* read from the pipe */
 		read(fd[READ_END], read_msg, BUFFER_SIZE);
-		printf("parent read %s\n",read_msg);
+		printf("parent end of pipe--received: %s\n",read_msg);
 
 		/* close the write end of the pipe */
 		close(fd[READ_END]);
